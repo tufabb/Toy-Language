@@ -1,7 +1,5 @@
 package interpreter.model.adt;
 
-import interpreter.model.exp.ADTException;
-
 import java.util.HashMap;
 
 public class MyDictionary<K,V> implements IDictionary<K,V> {
@@ -24,7 +22,7 @@ public class MyDictionary<K,V> implements IDictionary<K,V> {
     @Override
     public V lookup(K key) throws ADTException{
         if(!isDefined(key))
-            throw new ADTException("item dosen't exist");
+            throw new ADTException("missing key");
         return dictionary.get(key);
     }
     @Override
