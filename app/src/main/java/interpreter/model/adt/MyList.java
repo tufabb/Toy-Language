@@ -1,5 +1,7 @@
 package interpreter.model.adt;
 
+import interpreter.exceptions.ADTException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class MyList <T> implements IList<T>{
     }
 
     @Override
-    public T get(int pos)throws ADTException{
+    public T get(int pos)throws ADTException {
         if(size()-1<pos)
             throw new ADTException("index out of bounds");
         return list.get(pos);
