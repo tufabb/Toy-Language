@@ -33,7 +33,7 @@ public class PrgState {
 
     //toString
     public String toString(){
-        return exeStack+ "         "+symTable+"           "+out;
+        return "ExeStack: "+exeStack+ "\nSymTable: "+symTable+"\nOut: "+out;
     }
 
     //setters

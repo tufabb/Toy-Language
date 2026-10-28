@@ -1,0 +1,43 @@
+package interpreter.controller;
+
+import interpreter.exceptions.MyException;
+import interpreter.exceptions.StatementException;
+import interpreter.model.PrgState;
+import interpreter.model.adt.IStack;
+import interpreter.model.stmt.IStmt;
+import interpreter.repository.IRepository;
+import interpreter.repository.Repository;
+
+
+public class Controller {
+    private final IRepository repo;
+    private boolean flag;
+
+    public Controller(IRepository repo, boolean flag) {
+        this.repo = repo;
+        this.flag=flag;
+    }
+    public Controller(IRepository repo){
+        this.repo=repo;
+        this.flag=true;
+    }
+    public PrgState oneStep(PrgState state) throws MyException {
+        IStack<IStmt> stack = state.getExeStack();
+        if (stack.isEmpty())
+            throw new StatementException("program state stack is empty");
+        IStmt crtStmt = stack.pop();
+        return crtStmt.execute(state);
+    }
+    public void display(PrgState prg){
+        IO.println(prg.toString());
+    }
+
+    public void allStep() throws MyException {
+        PrgState prg = repo.getCrtPrg();
+        display(prg);
+        while (!prg.getExeStack().isEmpty()) {
+            oneStep(prg);
+            display(prg);
+        }
+    }
+}

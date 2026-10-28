@@ -3,12 +3,13 @@
  */
 package interpreter;
 
-public class Main {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import interpreter.view.View;
 
-    public static void main(String[] args) {
-        System.out.println(new Main().getGreeting());
+public class Main {
+
+
+    public static void main() {
+        var start=new View();
+        start.startUp();
     }
 }

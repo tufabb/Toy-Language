@@ -1,5 +1,6 @@
 package interpreter.repository;
 
+import interpreter.exceptions.MyException;
 import interpreter.model.PrgState;
 
 import java.util.ArrayList;
@@ -18,7 +19,10 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public PrgState getCrtPrg() {
+    public PrgState getCrtPrg() throws MyException {
+        if (repo.isEmpty())
+            throw new MyException("Repo is empty");
         return repo.get(repo.size()-1);
+
     }
 }
