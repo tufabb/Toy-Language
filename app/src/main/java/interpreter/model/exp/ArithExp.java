@@ -3,8 +3,8 @@ package interpreter.model.exp;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
-import interpreter.model.type.IValue;
-import interpreter.model.type.IntValue;
+import interpreter.model.value.IValue;
+import interpreter.model.value.IntValue;
 
 public record ArithExp(ArithOp op, IExp left, IExp right) implements IExp{
     @Override
@@ -23,8 +23,9 @@ public record ArithExp(ArithOp op, IExp left, IExp right) implements IExp{
             }
         };
     }
+
     @Override
-    public String toString(){
-        return "(" + left + " " + op +" "+ right + ")";
+    public String toString() {
+        return "(" + left + " " + op + " " + right + ")";
     }
 }

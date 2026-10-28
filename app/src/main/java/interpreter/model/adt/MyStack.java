@@ -5,8 +5,8 @@ import interpreter.exceptions.ADTException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class MyStack<T> implements IStack<T>{
-    private final Deque<T> stack= new ArrayDeque<>();
+public class MyStack<T> implements IStack<T> {
+    private final Deque<T> stack = new ArrayDeque<>();
 
     @Override
     public void push(T v) {
@@ -19,13 +19,14 @@ public class MyStack<T> implements IStack<T>{
             throw new ADTException("pop from an empty stack");
         return stack.pop();
     }
+
     @Override
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return stack.isEmpty();
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return stack.toString();
     }
 
