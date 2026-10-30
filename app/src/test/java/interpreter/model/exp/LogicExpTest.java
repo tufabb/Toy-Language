@@ -7,15 +7,22 @@ import interpreter.model.adt.MyDictionary;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class LogicExpTest {
-    private final IDictionary<String, IValue> symTable = new MyDictionary<>();
+    private IDictionary<String, IValue> symTable;
 
     private static IExp bul(boolean n) {
         return new ValueExp(new BoolValue(n));
+    }
+
+    @BeforeEach
+    public void setUp() {
+        this.symTable = new MyDictionary<>();
+
     }
 
     @Test

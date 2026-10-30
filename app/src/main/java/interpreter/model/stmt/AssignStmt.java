@@ -12,7 +12,7 @@ public record AssignStmt(String id, IExp exp) implements IStmt {
     public PrgState execute(PrgState state) throws MyException {
         IDictionary<String,IValue> symTable = state.getSymTable();
         if (!symTable.isDefined(id))
-            throw new StatementException("variable" + id + "was not declared");
+            throw new StatementException("variable " + id + " was not declared");
         IValue val = exp.eval(symTable);
         if (!val.getType().equals(symTable.lookup(id).getType()))
             throw new StatementException("declared type of variable " + id + " and type of the assigned expression do not match");

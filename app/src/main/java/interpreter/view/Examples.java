@@ -11,14 +11,14 @@ import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 
 public class Examples {
-    public IStmt exemple1(){
+    public static IStmt exemple1(){
         // Ex1: int v; v = 2; print(v)
         IStmt ex1 = new CompStmt(new VarDeclStmt("v", new IntType()),
                 new CompStmt(new AssignStmt("v", new ValueExp(new IntValue(2))),
                         new PrintStmt(new VarExp("v"))));
         return ex1;
     }
-    public IStmt exemple2(){
+    public static IStmt exemple2(){
         // Ex2: int a; int b; a = 2 + 3 * 5; b = a + 1; print(b)
         IStmt ex2 = new CompStmt(new VarDeclStmt("a", new IntType()),
                 new CompStmt(new VarDeclStmt("b", new IntType()),
@@ -32,7 +32,7 @@ public class Examples {
                                         new PrintStmt(new VarExp("b"))))));
         return ex2;
     }
-    public IStmt exemple3(){
+    public static IStmt exemple3(){
         // Ex3: bool a; int v; a = true; (if a then v = 2 else v = 3); print(v)
         IStmt ex3 = new CompStmt(new VarDeclStmt("a", new BoolType()),
                 new CompStmt(new VarDeclStmt("v", new IntType()),

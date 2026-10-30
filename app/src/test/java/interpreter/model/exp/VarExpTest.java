@@ -7,12 +7,19 @@ import interpreter.model.adt.IDictionary;
 import interpreter.model.adt.MyDictionary;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class VarExpTest {
-    private final IDictionary<String, IValue> symTable = new MyDictionary<>();
+    private IDictionary<String, IValue> symTable;
+
+    @BeforeEach
+    public void setUp() {
+        this.symTable = new MyDictionary<>();
+
+    }
 
     @Test
     void correctVarDeclarated() throws MyException {

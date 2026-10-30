@@ -8,6 +8,7 @@ import interpreter.model.type.BoolType;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,10 +16,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ArithExpTest {
 
-    private final IDictionary<String, IValue> symTable = new MyDictionary<>();
+    private IDictionary<String, IValue> symTable;
 
     private static IExp num(int n) {
         return new ValueExp(new IntValue(n));
+    }
+
+    @BeforeEach
+    public void setUp() {
+        this.symTable = new MyDictionary<>();
+
     }
 
     @Test
@@ -63,9 +70,10 @@ public class ArithExpTest {
         IExp e = new ArithExp(ArithOp.SUB, num(3), num(2));
         assertEquals(new IntValue(1), e.eval(symTable));
     }
+
     @Test
-    void checkToString(){
+    void checkToString() {
         IExp e = new ArithExp(ArithOp.SUB, num(3), num(2));
-        assertEquals("(3 - 2)",e.toString());
+        assertEquals("(3 - 2)", e.toString());
     }
 }
