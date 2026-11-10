@@ -4,6 +4,7 @@ import interpreter.exceptions.ADTException;
 import interpreter.model.value.IValue;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MyDictionary<K, V> implements IDictionary<K, V> {
     private final HashMap<K, V> dictionary = new HashMap<>();
@@ -19,7 +20,9 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
     }
 
     @Override
-    public void update(K key, V newVal) {
+    public void update(K key, V newVal) throws ADTException {
+        if(!dictionary.containsKey(key))
+            throw new ADTException("missing key");
         dictionary.replace(key, newVal);
     }
 
@@ -33,6 +36,18 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
     @Override
     public String toString() {
         return dictionary.toString();
+    }
+
+    @Override
+    public void remove(K key) throws ADTException{
+        if(!isDefined(key))
+            throw new ADTException("missing key");
+        dictionary.remove(key);
+    }
+
+    @Override
+    public Map<K,V> toMap(){
+        return new HashMap<K,V>(dictionary);
     }
 
 }
