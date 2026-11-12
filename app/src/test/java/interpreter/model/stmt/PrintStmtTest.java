@@ -13,31 +13,31 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PrintStmtTest {
-    private IStack<IStmt> exeStack;
-    private IDictionary<String, IValue> symTable;
-    private IList<IValue> out;
-
-    @BeforeEach
-    public void setUp(){
-        exeStack=new MyStack<>();
-        symTable=new MyDictionary<>();
-        out=new MyList<>();
-
-    }
+//    private IStack<IStmt> exeStack;
+//    private IDictionary<String, IValue> symTable;
+//    private IList<IValue> out;
+//
+//    @BeforeEach
+//    public void setUp(){
+//        exeStack=new MyStack<>();
+//        symTable=new MyDictionary<>();
+//        out=new MyList<>();
+//
+//    }
     @Test
     void addsValueToOut() throws MyException {
         PrintStmt print=new PrintStmt(new ValueExp(new IntValue(5)));
-        PrgState state=new PrgState(exeStack,symTable,out,print);
+        PrgState state= PrgState.of(print);
         print.execute(state);
-        assertEquals(1,out.size());
-        assertEquals(new IntValue(5),out.get(0));
+        assertEquals(1,state.getOut().size());
+        assertEquals(new IntValue(5),state.getOut().get(0));
     }
     @Test
     void executeInvalid(){
         PrintStmt print=new PrintStmt(new VarExp("x"));
-        PrgState state=new PrgState(exeStack,symTable,out,print);
+        PrgState state= PrgState.of(print);
         var ex=assertThrows(MyException.class,()-> print.execute(state));
-        assertEquals(0,out.size());
+        assertEquals(0,state.getOut().size());
     }
     
 

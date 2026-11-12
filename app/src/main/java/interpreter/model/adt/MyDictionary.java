@@ -50,4 +50,9 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
         return new HashMap<K,V>(dictionary);
     }
 
+    @Override
+    public boolean isEmpty(){
+        return dictionary.isEmpty();
+    }
+
 }

@@ -16,62 +16,67 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IfStmtTest {
-    private IStack<IStmt> exeStack;
-    private IDictionary<String, IValue> symTable;
-    private IList<IValue> out;
+//    private IStack<IStmt> exeStack;
+//    private IDictionary<String, IValue> symTable;
+//    private IList<IValue> out;
+//
+//    @BeforeEach
+//    public void setUp(){
+//        exeStack=new MyStack<>();
+//        symTable=new MyDictionary<>();
+//        out=new MyList<>();
+//
+//    }
+    private PrgState state;
 
     @BeforeEach
-    public void setUp(){
-        exeStack=new MyStack<>();
-        symTable=new MyDictionary<>();
-        out=new MyList<>();
+    public void setUp() {
 
+        state = PrgState.of(new NopStmt());
     }
     @Test
     void ifStmtFirstCondWorks()throws MyException {
         VarDeclStmt decl1=new VarDeclStmt("a",new BoolType());
-        PrgState initial1State=new PrgState(exeStack,symTable,out,decl1);
-        decl1.execute(initial1State);
+
+        decl1.execute(state);
 
         VarDeclStmt decl2=new VarDeclStmt("v",new IntType());
-        PrgState initial2State=new PrgState(exeStack,symTable,out,decl2);
-        decl2.execute(initial2State);
+        decl2.execute(state);
         AssignStmt asg=new AssignStmt("a",new ValueExp(new BoolValue(true)));
-        PrgState state=new PrgState(exeStack,symTable,out,asg);
         asg.execute(state);
 
         IfStmt if1=new IfStmt(new VarExp("a"),
                 new AssignStmt("v", new ValueExp(new IntValue(2))),
                 new AssignStmt("v", new ValueExp(new IntValue(3))));
-        PrgState if1State=new PrgState(exeStack,symTable,out,if1);
-        if1.execute(if1State);
-        IStmt pushedStmt = exeStack.pop();
-        pushedStmt.execute(if1State);
-        assertEquals(new IntValue(2),symTable.lookup("v"));
+
+        if1.execute(state);
+        IStmt pushedStmt = (IStmt) state.getExeStack().pop();
+        pushedStmt.execute(state);
+        assertEquals(new IntValue(2),state.getSymTable().lookup("v"));
 
 
     }
     @Test
     void ifStmtSecondCondWorks()throws MyException {
         VarDeclStmt decl1=new VarDeclStmt("a",new BoolType());
-        PrgState initial1State=new PrgState(exeStack,symTable,out,decl1);
-        decl1.execute(initial1State);
+
+        decl1.execute(state);
 
         VarDeclStmt decl2=new VarDeclStmt("v",new IntType());
-        PrgState initial2State=new PrgState(exeStack,symTable,out,decl2);
-        decl2.execute(initial2State);
+
+        decl2.execute(state);
         AssignStmt asg=new AssignStmt("a",new ValueExp(new BoolValue(false)));
-        PrgState state=new PrgState(exeStack,symTable,out,asg);
+
         asg.execute(state);
 
         IfStmt if1=new IfStmt(new VarExp("a"),
                 new AssignStmt("v", new ValueExp(new IntValue(2))),
                 new AssignStmt("v", new ValueExp(new IntValue(3))));
-        PrgState if1State=new PrgState(exeStack,symTable,out,if1);
-        if1.execute(if1State);
-        IStmt pushedStmt = exeStack.pop();
-        pushedStmt.execute(if1State);
-        assertEquals(new IntValue(3),symTable.lookup("v"));
+
+        if1.execute(state);
+        IStmt pushedStmt = (IStmt) state.getExeStack().pop();
+        pushedStmt.execute(state);
+        assertEquals(new IntValue(3),state.getSymTable().lookup("v"));
 
 
     }
@@ -79,19 +84,18 @@ class IfStmtTest {
     @Test
     void ifStmtCondNotBool() throws MyException{
         VarDeclStmt decl1=new VarDeclStmt("a",new IntType());
-        PrgState initial1State=new PrgState(exeStack,symTable,out,decl1);
-        decl1.execute(initial1State);
+
+        decl1.execute(state);
         AssignStmt asg=new AssignStmt("a",new ValueExp(new IntValue(22)));
-        PrgState state=new PrgState(exeStack,symTable,out,asg);
         asg.execute(state);
         VarDeclStmt decl2=new VarDeclStmt("v",new IntType());
-        PrgState initial2State=new PrgState(exeStack,symTable,out,decl2);
-        decl2.execute(initial2State);
+
+        decl2.execute(state);
         IfStmt if1=new IfStmt(new VarExp("a"),
                 new AssignStmt("v", new ValueExp(new IntValue(2))),
                 new AssignStmt("v", new ValueExp(new IntValue(3))));
-        PrgState if1State=new PrgState(exeStack,symTable,out,if1);
-        var ex=assertThrows(MyException.class,()->if1.execute(if1State));
+
+        var ex=assertThrows(MyException.class,()->if1.execute(state));
         assertEquals("if statement is wrong",ex.getMessage());
 
     }

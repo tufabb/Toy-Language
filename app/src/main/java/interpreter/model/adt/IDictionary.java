@@ -20,4 +20,5 @@ public interface IDictionary<K, V> {
     Map<K,V> toMap();
 
 
+    boolean isEmpty();
 }

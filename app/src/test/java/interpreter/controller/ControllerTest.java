@@ -13,47 +13,87 @@ import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
+    @TempDir
+    Path dir;
 
-    private static PrgState run(IStmt program) throws MyException {
-        PrgState state = new PrgState(new MyStack<>(), new MyDictionary<>(),
-                new MyList<>(), program);
-        new Controller(new Repository(state), false).allStep(); // display off
+    private PrgState run(IStmt program) throws MyException {
+        PrgState state =PrgState.of(program);
+        var repo=new Repository(state, dir.resolve("log.txt").toString());
+        new Controller(repo, false).allStep(); // display off
         return state;
     }
 
     @Test
     void example2PrintsEighteen() throws MyException {
-        PrgState state = run(Examples.exemple2());
+        PrgState state = run(Examples.EX2);
         assertTrue(state.getExeStack().isEmpty());
         assertEquals(new IntValue(18), state.getOut().get(0));
     }
 
     @Test
     void example3PrintsEighteen() throws MyException {
-        PrgState state = run(Examples.exemple3());
+        PrgState state = run(Examples.EX3);
         assertTrue(state.getExeStack().isEmpty());
         assertEquals(new IntValue(2), state.getOut().get(0));
     }
 
     @Test
     void example1PrintsEighteen() throws MyException {
-        PrgState state = run(Examples.exemple1());
+        PrgState state = run(Examples.EX1);
         assertTrue(state.getExeStack().isEmpty());
         assertEquals(new IntValue(2), state.getOut().get(0));
     }
 
     @Test
+    void example5PrintsFive() throws MyException{
+        PrgState state=run(Examples.EX5);
+        assertTrue(state.getExeStack().isEmpty());
+        assertEquals(new IntValue(5), state.getOut().get(0));
+
+    }
+    @Test
+    void example4Prints() throws MyException{
+        PrgState state=run(Examples.EX4);
+        assertTrue(state.getExeStack().isEmpty());
+        assertEquals(new IntValue(4), state.getOut().get(0));
+        assertEquals(new IntValue(10), state.getOut().get(1));
+
+    }
+
+    @Test
     void oneStepThrowsEmptyStack() throws MyException {
-        IStack<IStmt> exeStack = new MyStack<>();
-        PrgState emptyState = new PrgState(exeStack, new MyDictionary<>(), new MyList<>(), new NopStmt());
-        exeStack.pop();
-        Controller controller = new Controller(new Repository(emptyState), false);
+
+        PrgState emptyState = PrgState.of(new NopStmt());
+        emptyState.getExeStack().pop();
+        Controller controller = new Controller(new Repository(emptyState, dir.resolve("log.txt").toString()), false);
         assertThrows(StatementException.class, () -> controller.oneStep(emptyState));
     }
+    @Test
+    void fileExampleReadsBothNumbersAndClosesTheFile() throws Exception {
+        Path in = dir.resolve("test.in");
+        Files.writeString(in, "15\n50\n");
+        PrgState s = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(15), s.getOut().get(0));
+        assertEquals(new IntValue(50), s.getOut().get(1));
+        assertTrue(s.getFileTable().toMap().isEmpty());
+    }
+    @Test
+    void logFileContainsTheFourSectionsInOrder() throws Exception {
+        run(Examples.EX1);
+        String log = Files.readString(dir.resolve("log.txt"));
+        int a = log.indexOf("ExeStack:"), b = log.indexOf("SymTable:"),
+                c = log.indexOf("Out:"), d = log.indexOf("FileTable:");
+        assertTrue(0 <= a && a < b && b < c && c < d);
+    }
+
 
 
 }

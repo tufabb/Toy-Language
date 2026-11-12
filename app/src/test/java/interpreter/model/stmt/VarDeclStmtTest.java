@@ -13,28 +13,28 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VarDeclStmtTest {
-    private IStack<IStmt> exeStack;
-    private IDictionary<String, IValue> symTable;
-    private IList<IValue> out;
-
-    @BeforeEach
-    public void setUp(){
-        exeStack=new MyStack<>();
-        symTable=new MyDictionary<>();
-        out=new MyList<>();
-
-    }
+//    private IStack<IStmt> exeStack;
+//    private IDictionary<String, IValue> symTable;
+//    private IList<IValue> out;
+//
+//    @BeforeEach
+//    public void setUp(){
+//        exeStack=new MyStack<>();
+//        symTable=new MyDictionary<>();
+//        out=new MyList<>();
+//
+//    }
     @Test
     void correctDeclared()throws MyException {
         VarDeclStmt decl=new VarDeclStmt("v",new IntType());
-        PrgState initialState=new PrgState(exeStack,symTable,out,decl);
+        PrgState initialState= PrgState.of(decl);
         decl.execute(initialState);
-        assertEquals(new IntValue(0),symTable.lookup("v"));
+        assertEquals(new IntValue(0),initialState.getSymTable().lookup("v"));
     }
     @Test
     void varAlreadyDecl()throws MyException{
         VarDeclStmt decl=new VarDeclStmt("v",new IntType());
-        PrgState initialState=new PrgState(exeStack,symTable,out,decl);
+        PrgState initialState=PrgState.of(decl);
         decl.execute(initialState);
         var ex=assertThrows(StatementException.class,()->decl.execute(initialState));
         assertEquals("variable already declared",ex.getMessage());

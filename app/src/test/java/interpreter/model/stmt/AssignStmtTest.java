@@ -16,47 +16,90 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AssignStmtTest {
-    private IStack<IStmt> exeStack;
-    private IDictionary<String, IValue> symTable;
-    private IList<IValue>out;
+    private PrgState state;
 
     @BeforeEach
-    public void setUp(){
-        exeStack=new MyStack<>();
-        symTable=new MyDictionary<>();
-        out=new MyList<>();
-
+    public void setUp() {
+        // Initialize a clean program state using the factory method with a NopStmt placeholder
+        state = PrgState.of(new NopStmt());
     }
+
     @Test
     void correctAss() throws MyException {
-        VarDeclStmt decl=new VarDeclStmt("v",new IntType());
-        PrgState initialState=new PrgState(exeStack,symTable,out,decl);
-        decl.execute(initialState);
-        AssignStmt asg=new AssignStmt("v",new ValueExp(new IntValue(12)));
-        PrgState state=new PrgState(exeStack,symTable,out,asg);
-        asg.execute(state);
-        assertTrue(symTable.isDefined("v"));
-        assertEquals(new IntValue(12),symTable.lookup("v"));
+        VarDeclStmt decl = new VarDeclStmt("v", new IntType());
+        decl.execute(state); // Execute declaration on the shared state
 
+        AssignStmt asg = new AssignStmt("v", new ValueExp(new IntValue(12)));
+        asg.execute(state); // Execute assignment on the SAME state
+
+        assertTrue(state.getSymTable().isDefined("v"));
+        assertEquals(new IntValue(12), state.getSymTable().lookup("v"));
     }
     @Test
-    void variableNotDeclaredThrow() throws MyException{
-        AssignStmt asg=new AssignStmt("v",new ValueExp(new IntValue(12)));
-        PrgState state=new PrgState(exeStack,symTable,out,asg);
-        var ex=assertThrows(StatementException.class,()-> asg.execute(state));
-        assertEquals("variable v was not declared",ex.getMessage());
+    void variableNotDeclaredThrow() {
+        AssignStmt asg = new AssignStmt("v", new ValueExp(new IntValue(12)));
+
+        // Attempting to assign to 'v' without declaring it first
+        var ex = assertThrows(StatementException.class, () -> asg.execute(state));
+        assertEquals("variable v was not declared", ex.getMessage());
     }
     @Test
-    void declaredTypeNotMatch()throws MyException{
-        VarDeclStmt decl=new VarDeclStmt("v",new IntType());
-        PrgState initialState=new PrgState(exeStack,symTable,out,decl);
-        decl.execute(initialState);
-        AssignStmt asg=new AssignStmt("v",new ValueExp(new BoolValue(true)));
-        PrgState state=new PrgState(exeStack,symTable,out,asg);
-        var ex=assertThrows(StatementException.class,()-> asg.execute(state));
-        assertEquals("declared type of variable v and type of the assigned expression do not match",ex.getMessage());
+    void declaredTypeNotMatch() throws MyException {
+        VarDeclStmt decl = new VarDeclStmt("v", new IntType());
+        decl.execute(state); // Declare 'v' as int
 
+        AssignStmt asg = new AssignStmt("v", new ValueExp(new BoolValue(true))); // Try assigning a bool
 
+        var ex = assertThrows(StatementException.class, () -> asg.execute(state));
+        assertEquals("declared type of variable v and type of the assigned expression do not match", ex.getMessage());
     }
+
 
 }
+//
+//class AssignStmtTest {
+//    private IStack<IStmt> exeStack;
+//    private IDictionary<String, IValue> symTable;
+//    private IList<IValue>out;
+//
+//    @BeforeEach
+//    public void setUp(){
+//        exeStack=new MyStack<>();
+//        symTable=new MyDictionary<>();
+//        out=new MyList<>();
+//
+//    }
+//    @Test
+//    void correctAss() throws MyException {
+//        VarDeclStmt decl=new VarDeclStmt("v",new IntType());
+//        PrgState initialState=PrgState.of(decl);
+//        decl.execute(initialState);
+//        AssignStmt asg=new AssignStmt("v",new ValueExp(new IntValue(12)));
+//        PrgState state=PrgState.of(asg);
+//        asg.execute(state);
+//        assertTrue(symTable.isDefined("v"));
+//        assertEquals(new IntValue(12),symTable.lookup("v"));
+//
+//    }
+//    @Test
+//    void variableNotDeclaredThrow() throws MyException{
+//        AssignStmt asg=new AssignStmt("v",new ValueExp(new IntValue(12)));
+//        PrgState state=PrgState.of(asg);
+//        var ex=assertThrows(StatementException.class,()-> asg.execute(state));
+//        assertEquals("variable v was not declared",ex.getMessage());
+//    }
+//    @Test
+//    void declaredTypeNotMatch()throws MyException{
+//        VarDeclStmt decl=new VarDeclStmt("v",new IntType());
+//        PrgState initialState=PrgState.of(decl);
+//        decl.execute(initialState);
+//        AssignStmt asg=new AssignStmt("v",new ValueExp(new BoolValue(true)));
+//        PrgState state= PrgState.of(asg);
+//        var ex=assertThrows(StatementException.class,()-> asg.execute(state));
+//        assertEquals("declared type of variable v and type of the assigned expression do not match",ex.getMessage());
+//
+//
+//    }
+//
+//
+//}
