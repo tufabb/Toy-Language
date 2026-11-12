@@ -11,3 +11,4 @@ build
 out/
 .vccode/
 .DS_Store
+log*.txt

@@ -93,7 +93,15 @@ class ControllerTest {
                 c = log.indexOf("Out:"), d = log.indexOf("FileTable:");
         assertTrue(0 <= a && a < b && b < c && c < d);
     }
-
+    @Test
+    void fileExampleOnEmptyFilePrintsZeroZero() throws Exception {
+        Path in = dir.resolve("empty.in");
+        Files.writeString(in, "");                 // empty file
+        PrgState s = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(0), s.getOut().get(0));
+        assertEquals(new IntValue(0), s.getOut().get(1));
+        assertTrue(s.getFileTable().toMap().isEmpty());
+    }
 
 
 }
