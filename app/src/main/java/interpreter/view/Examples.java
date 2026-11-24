@@ -4,8 +4,10 @@ import interpreter.model.exp.*;
 import interpreter.model.stmt.*;
 import interpreter.model.type.BoolType;
 import interpreter.model.type.IntType;
+import interpreter.model.type.RefType;
 import interpreter.model.type.StringType;
 import interpreter.model.value.BoolValue;
+import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
 import interpreter.model.value.StringValue;
 
@@ -66,6 +68,24 @@ public class Examples {
                                                 new PrintStmt(new VarExp("a")),
                                                 new PrintStmt(new VarExp("b")))))));
     }
+    public static final IStmt EX6=
+            new CompStmt(new VarDeclStmt("v",new RefType(new IntType())),
+                    new CompStmt(new NewStmt("v",new ValueExp(new IntValue(20))),
+                            new CompStmt(new VarDeclStmt("a",new RefType(new RefType(new IntType()))),
+                                new CompStmt(new NewStmt("v",new VarExp("a")),
+                                        new CompStmt(new PrintStmt(new VarExp("v")),
+                                                new PrintStmt(new VarExp("a")))))));
+
+    public static final IStmt EX10 =
+            new CompStmt(new VarDeclStmt("v", new IntType()),
+                    new CompStmt(new AssignStmt("v", new ValueExp(new IntValue(4))),
+                            new CompStmt(new WhileStmt(
+                                    new RelationalExp(RelOp.GT, new VarExp("v"), new ValueExp(new IntValue(0))),
+                                    new CompStmt(new PrintStmt(new VarExp("v")),
+                                            new AssignStmt("v", new ArithExp(ArithOp.SUB,
+                                                    new VarExp("v"), new ValueExp(new IntValue(1)))))),
+                                    new PrintStmt(new VarExp("v")))));
+
 
     public static final IStmt EX4 = fileExample("test.in");
     public static final IStmt EX3=EX3();
