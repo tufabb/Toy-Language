@@ -16,12 +16,13 @@ public record ReadFileStmt(IExp exp,String varName) implements IStmt {
     @Override
     public PrgState execute(PrgState state) throws MyException{
         var symTable=state.getSymTable();
+        var heap=state.getHeap();
         if(!symTable.isDefined(varName))
             throw new StatementException("variable not declared");
         IValue v= (IValue) symTable.lookup(varName);
         if(!(v.getType() instanceof IntType))
             throw new StatementException("variable not of type int");
-        if(!(exp.eval(symTable) instanceof StringValue fileName))
+        if(!(exp.eval(symTable,heap) instanceof StringValue fileName))
             throw new StatementException("read file: "+exp+ "is not a string ");
         var fileTable=state.getFileTable();
         if(!fileTable.isDefined(fileName))

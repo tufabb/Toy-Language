@@ -11,7 +11,8 @@ public record IfStmt(IExp cond, IStmt thenS, IStmt elseS) implements IStmt {
     @Override
     public PrgState execute(PrgState state) throws MyException{
         var symTable=state.getSymTable();
-        IValue c=cond.eval(symTable);
+        var heap=state.getHeap();
+        IValue c=cond.eval(symTable,heap);
         if(!(c instanceof BoolValue boolCond))
             throw new StatementException("if statement is wrong");
         if(boolCond.b())
