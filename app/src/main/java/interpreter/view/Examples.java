@@ -72,9 +72,31 @@ public class Examples {
             new CompStmt(new VarDeclStmt("v",new RefType(new IntType())),
                     new CompStmt(new NewStmt("v",new ValueExp(new IntValue(20))),
                             new CompStmt(new VarDeclStmt("a",new RefType(new RefType(new IntType()))),
-                                new CompStmt(new NewStmt("v",new VarExp("a")),
+                                new CompStmt(new NewStmt("a",new VarExp("v")),
                                         new CompStmt(new PrintStmt(new VarExp("v")),
                                                 new PrintStmt(new VarExp("a")))))));
+
+    public static final IStmt EX7=
+            new CompStmt(new VarDeclStmt("v",new RefType(new IntType())),
+                    new CompStmt(new NewStmt("v",new ValueExp(new IntValue(20))),
+                            new CompStmt(new VarDeclStmt("a",new RefType(new RefType(new IntType()))),
+                                    new CompStmt(new NewStmt("a",new VarExp("v")),
+                                            new CompStmt(new PrintStmt(new ReadHeapExp(new VarExp("v"))),
+                                                    new PrintStmt(new ArithExp(ArithOp.ADD,new ReadHeapExp(new ReadHeapExp(new VarExp("a"))),new ValueExp(new IntValue(5)))))))));
+    public static final IStmt EX8=
+            new CompStmt(new VarDeclStmt("v",new RefType(new IntType())),
+                    new CompStmt(new NewStmt("v",new ValueExp(new IntValue(20))),
+                            new CompStmt(new PrintStmt(new ReadHeapExp(new VarExp("v"))),
+                                    new CompStmt(new WriteHeapStmt("v",new ValueExp(new IntValue(30))),
+                                            new PrintStmt(new ArithExp(ArithOp.ADD,new ReadHeapExp(new VarExp("v")),new ValueExp(new IntValue(5))))))));
+
+    public static final IStmt EX9=
+            new CompStmt(new VarDeclStmt("v",new RefType(new IntType())),
+                    new CompStmt(new NewStmt("v",new ValueExp(new IntValue(20))),
+                            new CompStmt(new VarDeclStmt("a",new RefType(new RefType(new IntType()))),
+                                    new CompStmt(new NewStmt("a",new VarExp("v")),
+                                        new CompStmt(new NewStmt("v",new ValueExp(new IntValue(30))),
+                                                new PrintStmt(new ReadHeapExp(new ReadHeapExp(new VarExp("a")))))))));
 
     public static final IStmt EX10 =
             new CompStmt(new VarDeclStmt("v", new IntType()),
@@ -85,6 +107,8 @@ public class Examples {
                                             new AssignStmt("v", new ArithExp(ArithOp.SUB,
                                                     new VarExp("v"), new ValueExp(new IntValue(1)))))),
                                     new PrintStmt(new VarExp("v")))));
+
+
 
 
     public static final IStmt EX4 = fileExample("test.in");
